@@ -2,6 +2,7 @@ from flask import Flask
 from redis import Redis, RedisError
 import os
 import socket
+import sys
 
 # Connect to Redis
 redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)
@@ -17,8 +18,7 @@ def hello():
 
     html = "<h3>Hello {name}!</h3>" \
            "<b>Hostname:</b> {hostname}<br/>" \
-           "<b>Visits:</b> {visits}"
-    return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
+    return html.format(name=sys.argv[1], hostname=socket.gethostname())
 
 @app.route("/display")	
 def display():

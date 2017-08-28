@@ -1,20 +1,18 @@
-# Use an official Python runtime as a parent image
-FROM python:2.7-slim
+# Using official python runtime base image
+FROM python:2.7-alpine
 
-# Set the working directory to /app
+# Set the application directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-ADD . /app
-
-# Install any needed packages specified in requirements.txt
+# Install our requirements.txt
+ADD requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
-# Make port 80 available to the world outside this container
+# Copy our code from the current folder to /app inside the container
+ADD . /app
+
+# Make port 80 available for links and/or publish
 EXPOSE 80
 
-# Define environment variable
-ENV NAME Mouhaha
-
-# Run app.py when the container launches
-CMD ["python", "app.py", "kev"]
+# Define our command to be run when launching the container
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]
